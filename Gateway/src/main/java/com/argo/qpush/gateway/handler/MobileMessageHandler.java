@@ -86,15 +86,17 @@ public class MobileMessageHandler extends ChannelInboundHandlerAdapter {
             Connection conn = ConnectionKeeper.get(pbapnsEvent.getAppKey(), pbapnsEvent.getUserId());
             if (null != conn){
                 logger.error("你已经在线了!. KickOff pbapnsEvent={}, conn={}", pbapnsEvent, conn);
-                ack(ctx, conn, pbapnsEvent, MULTI_CLIENTS);
+                //MULTI_CLIENTS此代码会导致客户端链接关闭
+                //ack(ctx, conn, pbapnsEvent, MULTI_CLIENTS);
             }
-
-            conn = new Connection(ctx);
-            conn.setUserId(pbapnsEvent.getUserId());
-            conn.setAppKey(pbapnsEvent.getAppKey());
-            ConnectionKeeper.add(pbapnsEvent.getAppKey(), pbapnsEvent.getUserId(), conn);
-            //记录客户端
-            MessageHandlerPoolTasks.instance.getExecutor().submit(new OnNewlyAddThread(pbapnsEvent));
+            else{
+                conn = new Connection(ctx);
+                conn.setUserId(pbapnsEvent.getUserId());
+                conn.setAppKey(pbapnsEvent.getAppKey());
+                ConnectionKeeper.add(pbapnsEvent.getAppKey(), pbapnsEvent.getUserId(), conn);
+                //记录客户端
+                MessageHandlerPoolTasks.instance.getExecutor().submit(new OnNewlyAddThread(pbapnsEvent));
+            }
             ack(ctx, conn, pbapnsEvent, SYNC);
             if (logger.isDebugEnabled()){
                 logger.debug("Got Online Message and handle DONE. {}", pbapnsEvent);
