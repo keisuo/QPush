@@ -159,8 +159,8 @@ public class MobileApp {
     }
 
     private void connect(){
-        final int port = 8080;
-        final int pool = 2;
+        final int port = 9080;
+        final int pool = 1;
         final String host = "127.0.0.1";
 
         workerGroup = new NioEventLoopGroup(pool);
