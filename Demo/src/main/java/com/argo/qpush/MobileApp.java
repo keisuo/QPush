@@ -138,6 +138,7 @@ public class MobileApp {
                 .setOp(PBAPNSEvent.Ops.Online_VALUE)
                 .setAppKey("app01")
                 .setUserId("1")
+                .setToken("token")
                 .setTypeId(PBAPNSEvent.DeviceTypes.Android_VALUE).build();
         send(channel, event);
         channels.addLast(channel);
